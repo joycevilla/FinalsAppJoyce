@@ -1,0 +1,160 @@
+body{
+  background-color:#B64926;
+  padding:30px;
+  height: 100vh;
+}
+.info{
+  width:100%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  bottom:-10px;
+  z-index:3;
+  opacity:0.5;
+}
+#TodoApp{
+  margin:auto;
+  background-color:teal;
+  padding:15px;
+  width:100%;
+  height:100%;
+  box-shadow: 10px 10px 0px #8E2800;
+  border-radius:15px;
+  position: relative;
+  max-width:500px;
+  min-width:300px;
+}
+#TodoApp > div{
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+h1{
+  text-align:center;
+  background-color:#FFB03B;
+  border-radius:5px;
+  padding:10px;
+  margin:0;
+  position:relative;
+  overflow:hidden;
+  &:hover{
+    .reactLogo{
+      transform:translateX(0);
+    }
+  }
+  .reactLogo{
+    transform:translateX(-100%);
+    transition:transform 0.3s ease-in-out;
+    height:100%;
+    position:absolute;
+    left:0;
+    top:0;
+    padding: 0.2em 10px;
+    -webkit-filter:brightness(0%);
+    opacity:0.5;
+    background-color: rgba(0,0,0,0.3);
+    border-right:1px solid rgba(0,0,0,0.3);
+    &:hover{
+      background-color: rgba(0,0,0,0.1); 
+    }
+    &:active{
+      top:2px;
+    }
+  }
+}
+
+ul{
+  margin:10px 0px;
+  margin-bottom:10px!important;
+  height:100%;
+  overflow:scroll;
+}
+li{
+  font-size:1.5em;
+}
+li:hover i{
+  opacity:1;
+}
+i{
+  float:right;
+  margin-right:10px;
+  opacity:0;
+}
+.fa-close{
+  color:red;
+}
+.fa-check{
+  color:green;
+}
+form{
+  width:100%;
+}
+.btn-default{
+  background: #B64926;
+  border:1px solid #B64926;
+}
+.form-control{
+  font-size:1.5em;
+}
+pre{
+  display:none;
+}
+.complete{
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  z-index: 3;
+  background-color:#FFB03B;
+  border-radius:15px;
+  box-shadow:10px 10px 0px rgba(0,0,0,0.4);
+  text-align:center;
+  padding:20px;
+  display:flex;
+  flex-direction: column;
+  justify-content: space-around;
+  min-width: 231px;
+  span{
+    font-size:12em;
+    color: green;
+  } 
+  h3{
+    font-size:3em;
+    color:teal;
+  }
+  .btn{
+    font-weight:900;
+    font-size:1.5em;
+  }
+  .keep{
+    background-color:teal;
+    margin-right:1em;
+  }
+  .remove{
+    background-color:#B64926;
+    
+  }
+}
+
+.priority{
+  .badge{
+    font-size:1em;
+    margin:0px 5px;
+  }
+  .fa{
+    display:none;
+  }
+  &:hover{
+    .fa{
+      display:initial;
+    }
+  }
+}
+a:hover{
+  text-decoration:none;
+}
+
+.todoName{
+  margin-left:5px;
+}

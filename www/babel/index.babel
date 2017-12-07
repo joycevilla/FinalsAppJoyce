@@ -1,0 +1,199 @@
+const TodoList = React.createClass({
+  getInitialState(){
+    return {
+      todos:[
+        {
+          name: 'Learn More React',
+          date: new Date(),
+          priority:1,
+          done: false
+        }
+      ],
+      complete:false
+    }
+  },
+  addTodo(todo){
+    this.state.todos.push(todo);
+    this.setState({
+      todos: this.state.todos
+    })
+  },
+  delete(toDelete){
+    _.remove(this.state.todos, todo=> todo.date === toDelete);
+    this.setState({todos:this.state.todos})
+  },
+  renderTodos(deleteTodo, toggleComplete, _changePriority ){
+   return this.state.todos.map(function(todo){
+        return (
+          <TodoItem 
+            name={todo.name}
+            priority={todo.priority} 
+            date={todo.date}
+            done={todo.done}
+            delete={deleteTodo} 
+            toggle={toggleComplete} 
+            changePriority={_changePriority}
+          />
+        )
+    })
+  },
+  changePriority(inc, date){
+    this.state.todos.forEach(todo => {
+      if(todo.date === date){
+        (inc) ? todo.priority ++ : todo.priority --;
+      }
+    })
+    this.state.todos = _.sortBy(this.state.todos, ["priority"]).reverse();
+    this.setState({todos: this.state.todos})
+    
+  },
+  _toggleComplete(date){
+    let status;
+    this.state.todos.forEach(todo => {
+      if(todo.date === date){
+        todo.done = !todo.done;  
+      }
+      status = todo.done
+    })
+    this.setState({
+          complete: (status) ? true : false,
+          toDelete: date,
+          todos: this.state.todos
+    })
+  },
+  _completeTask(remove){
+    if(remove) this.delete(this.state.toDelete);
+    else{
+      this.state.todos.forEach(todo => {
+        if(todo.date === this.state.toDelete){
+          todo.priority = 0;
+        }
+      })
+    };
+    this.state.todos = _.sortBy(this.state.todos, ["priority"]).reverse();
+    this.setState({
+      complete: false,
+      toDelete: null,
+      todos: this.state.todos
+    })
+  },
+  render(){
+    return (
+      <div className="todoList">
+        <h1>
+          <img className="reactLogo" src="http://red-badger.com/blog/wp-content/uploads/2015/04/react-logo-1000-transparent.png"/>
+          Todos 
+        </h1>
+        <Complete complete={this.state.complete} _remove={this._completeTask.bind(this, true)} _keep={this._completeTask.bind(this, false)}/>
+        
+        <ul className="list-group">
+          {this.renderTodos(this.delete, this._toggleComplete.bind(this), this.changePriority.bind(this))}
+        </ul>
+        <Add addTodo={this.addTodo}/>
+      </div>
+    )
+  }
+});
+
+const Complete = React.createClass({
+  render(){
+    const style={
+      display: this.props.complete ? 'initial' : 'none'
+    }
+    return (
+      <div style={style} className="complete animated fadeIn">
+        <span className="fa fa-thumbs-up"></span>
+        <h3>Great Job!</h3>
+        <button onClick={this.props._keep} className="btn keep">Keep</button>
+        <button onClick={this.props._remove} className="btn remove">Delete</button>
+      </div>
+    )
+  }
+});
+
+const TodoItem = React.createClass({
+  _toggle(){
+    this.props.toggle(this.props.date);
+  },
+  _changePriority(inc, date){
+    this.props.changePriority(inc, date)
+  },
+  render(){
+    const style={
+      color: this.props.done ? 'green' : 'red'
+    }
+    const hidePlus={
+      visibility: (this.props.priority > 4 || this.props.done ) ? 'hidden' : 'initial'
+    }
+    const hideMinus={
+      visibility: (this.props.priority < 1 || this.props.done ) ? 'hidden' : 'initial'
+    }
+    const priorityColor={
+      0: 'gray',
+      1: 'blue',
+      2: 'green',
+      3: 'gold',
+      4: 'orange',
+      5: 'red'
+    };
+    const color={
+      'background-color': priorityColor[this.props.priority]
+    }
+    return (
+      <li className="list-group-item">
+        <span className="priority">
+          <a style={hideMinus} className="fa fa-minus" onClick={this._changePriority.bind(this, false, this.props.date)}></a>  
+          <span style={color} className="badge">{this.props.priority}</span>
+          <a style={hidePlus} className="fa fa-plus" onClick={this._changePriority.bind(this, true, this.props.date)}></a>
+        </span>
+        <span style={style} className="todoName">{this.props.name}</span>
+        <i className="fa fa-close" onClick={this.props.delete.bind(this, this.props.date)}></i>
+        <i className="fa fa-check" onClick={this._toggle}></i>
+      </li>
+    )
+  }
+});
+
+const Add = React.createClass({
+  getInitialState () {
+    return {name: ''};
+  },
+  _submit(e){
+    e.preventDefault();
+    if(this.state.name.length<1) return;
+    this.props.addTodo({
+      name: this.state.name,
+      date: new Date(),
+      priority:1,
+      done: false
+    });    
+    this.setState({name: '' });
+  },
+  _input: function(e) {
+    this.setState({name: e.target.value});
+  },
+  render(){
+    return (
+        <form onSubmit={this._submit}>
+          <div className="input-group">
+            <input 
+              className="form-control" 
+              type="text" 
+              placeholder="Add a todo" 
+              value={this.state.name}
+              onChange={this._input}
+            />
+            <span className="input-group-btn">
+              <input 
+                className="btn btn-default" 
+                type="submit" 
+                value="ADD"
+              />
+            </span>
+          </div>
+        </form>
+    )
+  }
+});
+
+React.render(<TodoList />, document.getElementById("TodoApp"));
